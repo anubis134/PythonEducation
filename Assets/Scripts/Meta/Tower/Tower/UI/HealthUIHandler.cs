@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public sealed class HealthUIHandler : MonoBehaviour
 {
     [SerializeField]
-    private Image _progressBarImage;
+    private Image[] _progressBarImages;
     private Health _bufferedHealth;
 
     private void Awake()
@@ -25,8 +25,21 @@ public sealed class HealthUIHandler : MonoBehaviour
         _bufferedHealth.OnHealthWaschanged -= UpdateHealthBar;
     }
 
-    private void UpdateHealthBar(float newValue) 
+    private void UpdateHealthBar(int newValue)
     {
-        _progressBarImage.fillAmount = newValue;
+        ClearAllHeath();
+        
+        for (int i = 0; i < newValue; i++)
+        {
+            _progressBarImages[i].enabled = true;
+        }
+    }
+
+    private void ClearAllHeath()
+    {
+        foreach (var heathImage in _progressBarImages)
+        {
+            heathImage.enabled = false;
+        }
     }
 }

@@ -10,6 +10,7 @@ public class EggGameManager : MonoBehaviour
 
     public void SetDialogText(TMP_InputField inputField) 
     {
-        _dialogText.text =  $"Привет, {inputField.text}";
+        _dialogText.text =  $"РџСЂРёРІРµС‚, {inputField.text}";
+        GameState.Instance.ShowCompleteScreen();
     }
 }

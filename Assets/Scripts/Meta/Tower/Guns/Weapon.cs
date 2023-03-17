@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class Weapon : Shooting
 {
@@ -19,6 +21,28 @@ public class Weapon : Shooting
     private float _shootDelay;
     [SerializeField]
     private UnityEvent OnShoot;
+    [SerializeField] 
+    private TMP_InputField _inputField;
+    [SerializeField] 
+    private Health _health;
+
+    private void Awake()
+    {
+        _inputField.onValueChanged.AddListener(Call);
+    }
+
+    private void OnDestroy()
+    {
+        _inputField.onValueChanged.RemoveListener(Call);
+    }
+
+    private void Call(string value)
+    {
+        if(int.Parse(value) > _health.HealthProperty || int.Parse(value) < 0)
+        {
+            _inputField.text = "0";
+        }
+    }
 
     public void StartShooting(TMP_InputField inputField) 
     {
@@ -32,12 +56,17 @@ public class Weapon : Shooting
         OnShoot?.Invoke();
     }
 
-    private IEnumerator ShootingRoutine() 
+    private IEnumerator ShootingRoutine()
     {
-        while (AttackManager.Instance.AllowAttack) 
+        int shootCount = int.Parse(_inputField.text);
+        
+        while (shootCount > 0)
         {
+            shootCount--;
             Shoot(_bulletPrefab, _targetTransform, _jumpPower, _shootTime);
             yield return new WaitForSeconds(_shootDelay);
         }
+        
+        GameState.Instance.ShowCompleteScreen();
     }
 }
